@@ -214,10 +214,43 @@ class MinimaxPlayer(IsolationPlayer):
 
         # TODO: finish this function!
         #raise NotImplementedError
-        legal_moves = game.get_legal_moves()
+        legal_moves = game.get_legal_moves()    # Node
 
-        if not legal_moves:
+        if not game.get_legal_moves():
             return (-1, -1)
+        alpha = float("-inf")
+
+        #print(legal_moves)
+
+        def max_play(self, game, depth):
+            if depth == 0:
+                return self.score(game, self)
+            moves = game.get_legal_moves()
+            alpha = float("-inf")
+            for move in moves:  # for each child of node
+                if self.time_left() < self.TIMER_THRESHOLD:
+                    raise SearchTimeout()
+                best_score = self.min_play()
+                if best_score > alpha:
+                    alpha = best_score
+                    if alpha > beta:
+                        print('Prunning')
+                        break
+            return alpha
+
+        def min_play(self, game, depth):
+            if depth == 0:
+                return self.score(game, self)
+            moves = game.get_legal_moves()
+            beta = float("-inf")
+            for move in moves:
+                if self.time_left() < self.TIMER_THRESHOLD:
+                    raise SearchTimeout()
+                best_score = self.max_play()
+                if best_score < beta:
+                    beta = best_score
+            return beta
+
 
 class AlphaBetaPlayer(IsolationPlayer):
     """Game-playing agent that chooses a move using iterative deepening minimax
