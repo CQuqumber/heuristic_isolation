@@ -209,18 +209,28 @@ class MinimaxPlayer(IsolationPlayer):
                 each helper function or else your agent will timeout during
                 testing.
         """
-        if self.time_left() < self.TIMER_THRESHOLD:
-            raise SearchTimeout()
+        #if self.time_left() < self.TIMER_THRESHOLD:
+        #   raise SearchTimeout()
 
         # TODO: finish this function!
         #raise NotImplementedError
-        legal_moves = game.get_legal_moves()    # Node
 
-        if not game.get_legal_moves():
-            return (-1, -1)
-        alpha = float("-inf")
-
-        #print(legal_moves)
+        '''function MINIMAX-DECISION(state) returns an action
+            return arg max a ∈ ACTIONS(s) MIN-VALUE(RESULT(state, a))'''
+        def minimax(self, game, depth):
+            moves = game.get_legal_moves()
+            if not moves:
+                return (-1, -1)
+            alpha = float("-inf")
+            best_move = moves[0]    # initial best move by random selection
+            for move in moves:
+                if self.time_left() < self.TIMER_THRESHOLD: #  set timer
+                    raise SearchTimeout()
+                best_score = min_play(game.forecast_move(), depth-1)
+                if best_score > alpha:
+                    alpha = best_score
+                    best_move = move
+            return move
 
         def max_play(self, game, depth):
             if depth == 0:
@@ -228,13 +238,13 @@ class MinimaxPlayer(IsolationPlayer):
             moves = game.get_legal_moves()
             alpha = float("-inf")
             for move in moves:  # for each child of node
-                if self.time_left() < self.TIMER_THRESHOLD:
+                if self.time_left() < self.TIMER_THRESHOLD: #  set timer
                     raise SearchTimeout()
-                best_score = self.min_play()
+                best_score = self.min_play(game.forecast_move(move), depth-1)
                 if best_score > alpha:
                     alpha = best_score
                     if alpha > beta:
-                        print('Prunning')
+                        print('Non Overlapping => Prunning')
                         break
             return alpha
 
@@ -242,11 +252,11 @@ class MinimaxPlayer(IsolationPlayer):
             if depth == 0:
                 return self.score(game, self)
             moves = game.get_legal_moves()
-            beta = float("-inf")
-            for move in moves:
-                if self.time_left() < self.TIMER_THRESHOLD:
+            beta = float("inf")
+            for move in moves:  #  loop each child of node
+                if self.time_left() < self.TIMER_THRESHOLD: #  set timer
                     raise SearchTimeout()
-                best_score = self.max_play()
+                best_score = self.max_play(game.forecast_move(move), depth-1)
                 if best_score < beta:
                     beta = best_score
             return beta
