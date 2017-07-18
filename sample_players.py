@@ -261,13 +261,7 @@ if __name__ == "__main__":
     game = Board(player1, player2)
     score = float("-inf")
     moves = game.get_legal_moves()
-    print('===============================================') 
-    for move in moves:
-        next_state = game.forecast_move(move)
-
-        print('next_state', next_state.to_string())
-    print('===============================================')   
-    #print('moves[0]', moves[0])
+    print('best_move:',moves)
 
     # place player 1 on the board at row 2, column 3, then place player 2 on
     # the board at row 0, column 5; display the resulting board state.  Note
